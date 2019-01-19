@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="sv"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Calculator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Calculator2</a> &gt; <a href="index.source.html" class="el_package">calculator</a> &gt; <span class="el_source">Calculator.java</span></div><h1>Calculator.java</h1><pre class="source lang-java linenums">package calculator;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+/**
+ * Final project Calculator2
+ *
+ * Main class that setups and start the application
+ *
+ * @author  Helena Malki
+ * @version 1.0
+ */
+public class Calculator extends JFrame {
+<span class="nc" id="L17">    private CalculatorBasicOperations basicOperations = new CalculatorBasicOperations();</span>
+<span class="nc" id="L18">    private CalculatorAdvancedOperations advancedOperations = new CalculatorAdvancedOperations();</span>
+
+<span class="nc" id="L20">    private String firstInputNumber = &quot;&quot;;</span>
+<span class="nc" id="L21">    private String secondInputNumber = &quot;&quot;;</span>
+<span class="nc" id="L22">    private String mathCommand = &quot;&quot;;</span>
+<span class="nc" id="L23">    private String outputText = &quot;&quot;;</span>
+
+    private JLabel outputField;
+    private JPanel numberPanel;
+    private JPanel basicOperationPanel;
+    private JPanel advancedOperationPanel;
+
+    /**
+     * Calculator2 constructor
+     */
+<span class="nc" id="L33">    public Calculator() {</span>
+<span class="nc" id="L34">        initUI();</span>
+<span class="nc" id="L35">    }</span>
+
+    /**
+     * Updates the outputField
+     */
+    public void updateOutputField() {
+<span class="nc" id="L41">        outputField.setText(outputText);</span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Setups the number panel where all numbers, C, = and decimal lives.
+     */
+    public void setUpNumberPanel() {
+<span class="nc" id="L48">        numberPanel = new JPanel();</span>
+<span class="nc" id="L49">        numberPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));</span>
+<span class="nc" id="L50">        numberPanel.setLayout(new GridLayout(4, 3, 5, 5));</span>
+
+<span class="nc" id="L52">        String[] buttons = {&quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;.&quot;};</span>
+
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        for (String button : buttons) {</span>
+<span class="nc" id="L55">            JButton jButton = new JButton(button);</span>
+<span class="nc" id="L56">            jButton.addActionListener(numberListener());</span>
+<span class="nc" id="L57">            numberPanel.add(jButton);</span>
+        }
+
+<span class="nc" id="L60">        JButton clearButton = new JButton(&quot;C&quot;);</span>
+<span class="nc" id="L61">        clearButton.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L63">                clearCalculator();</span>
+<span class="nc" id="L64">                outputField.setText(&quot; &quot;);</span>
+<span class="nc" id="L65">            }</span>
+        });
+<span class="nc" id="L67">        numberPanel.add(clearButton);</span>
+
+<span class="nc" id="L69">        JButton equalButton = new JButton(&quot;=&quot;);</span>
+<span class="nc" id="L70">        equalButton.addActionListener(new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L72">                calculateAction();</span>
+<span class="nc" id="L73">            }</span>
+        });
+
+<span class="nc" id="L76">        numberPanel.add(equalButton);</span>
+<span class="nc" id="L77">    }</span>
+
+    /**
+     * Method that calculates the values
+     */
+    private void calculateAction() {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        double a = firstInputNumber.isEmpty() ? 0 : Double.parseDouble(firstInputNumber);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        double b = secondInputNumber.isEmpty() ? 0 : Double.parseDouble(secondInputNumber);</span>
+<span class="nc" id="L85">        double result = 0;</span>
+
+<span class="nc bnc" id="L87" title="All 42 branches missed.">        switch (mathCommand) {</span>
+            case &quot;+&quot;:
+<span class="nc" id="L89">                result = basicOperations.addition(a, b);</span>
+<span class="nc" id="L90">                break;</span>
+            case &quot;-&quot;:
+<span class="nc" id="L92">                result = basicOperations.subtraction(a, b);</span>
+<span class="nc" id="L93">                break;</span>
+            case &quot;/&quot;:
+<span class="nc" id="L95">                result = basicOperations.division(a, b);</span>
+<span class="nc" id="L96">                break;</span>
+            case &quot;*&quot;:
+<span class="nc" id="L98">                result = basicOperations.multiply(a, b);</span>
+<span class="nc" id="L99">                break;</span>
+            case &quot;abs&quot;:
+<span class="nc" id="L101">                result = advancedOperations.abs(a);</span>
+<span class="nc" id="L102">                break;</span>
+            case &quot;cos&quot;:
+<span class="nc" id="L104">                result = advancedOperations.cos(a);</span>
+<span class="nc" id="L105">                break;</span>
+            case &quot;sqrt&quot;:
+<span class="nc" id="L107">                result = advancedOperations.sqrt(a);</span>
+<span class="nc" id="L108">                break;</span>
+            case &quot;cbrt&quot;:
+<span class="nc" id="L110">                result = advancedOperations.cbrt(a);</span>
+<span class="nc" id="L111">                break;</span>
+            case &quot;tan&quot;:
+<span class="nc" id="L113">                result = advancedOperations.tan(a);</span>
+<span class="nc" id="L114">                break;</span>
+            case &quot;sin&quot;:
+<span class="nc" id="L116">                result = advancedOperations.sin(a);</span>
+                break;
+        }
+
+<span class="nc" id="L120">        outputText = String.valueOf(result);</span>
+<span class="nc" id="L121">        updateOutputField();</span>
+<span class="nc" id="L122">        clearCalculator();</span>
+<span class="nc" id="L123">    }</span>
+
+    /**
+     * Clears all values for the calculator
+     */
+    private void clearCalculator() {
+<span class="nc" id="L129">        firstInputNumber = &quot;&quot;;</span>
+<span class="nc" id="L130">        secondInputNumber = &quot;&quot;;</span>
+<span class="nc" id="L131">        mathCommand = &quot;&quot;;</span>
+<span class="nc" id="L132">        outputText = &quot;&quot;;</span>
+<span class="nc" id="L133">    }</span>
+
+    /**
+     * Setups the basic operation panel that includes, +, - , / and *
+     */
+    public void setUpBasicOperationPanel() {
+
+<span class="nc" id="L140">        basicOperationPanel = new JPanel();</span>
+<span class="nc" id="L141">        basicOperationPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));</span>
+<span class="nc" id="L142">        basicOperationPanel.setSize(100, 200);</span>
+<span class="nc" id="L143">        basicOperationPanel.setLayout(new GridLayout(4, 1, 5, 5));</span>
+
+<span class="nc" id="L145">        String[] buttons = {&quot;+&quot;, &quot;-&quot;, &quot;/&quot;, &quot;*&quot;};</span>
+
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        for (String button : buttons) {</span>
+<span class="nc" id="L148">            JButton jButton = new JButton(button);</span>
+<span class="nc" id="L149">            jButton.addActionListener(operationListener());</span>
+<span class="nc" id="L150">            basicOperationPanel.add(jButton);</span>
+        }
+<span class="nc" id="L152">    }</span>
+
+    /**
+     * Setups the output field, this field will show the input and result.
+     */
+    public void setUpOutputNumberFieldPanel() {
+<span class="nc" id="L158">        outputField = new JLabel(&quot; &quot;);</span>
+<span class="nc" id="L159">    }</span>
+
+    /**
+     * Setups the advance operation panel that includes abs, cos, sqrt, cbrt, tan and sin
+     */
+    public void setUpAdvancedOperationPanel() {
+<span class="nc" id="L165">        advancedOperationPanel = new JPanel();</span>
+<span class="nc" id="L166">        advancedOperationPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));</span>
+<span class="nc" id="L167">        advancedOperationPanel.setSize(100, 200);</span>
+<span class="nc" id="L168">        advancedOperationPanel.setLayout(new GridLayout(6, 1, 5, 5));</span>
+
+<span class="nc" id="L170">        String[] buttons = {&quot;abs&quot;, &quot;cos&quot;, &quot;sqrt&quot;, &quot;cbrt&quot;, &quot;tan&quot;, &quot;sin&quot;};</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        for (String button : buttons) {</span>
+<span class="nc" id="L172">            JButton jButton = new JButton(button);</span>
+<span class="nc" id="L173">            jButton.addActionListener(operationListener());</span>
+<span class="nc" id="L174">            advancedOperationPanel.add(jButton);</span>
+        }
+<span class="nc" id="L176">    }</span>
+
+    /**
+     * Initiates all the panels
+     */
+    private void initUI() {
+<span class="nc" id="L182">        setUpOutputNumberFieldPanel();</span>
+<span class="nc" id="L183">        setUpNumberPanel();</span>
+<span class="nc" id="L184">        setUpBasicOperationPanel();</span>
+<span class="nc" id="L185">        setUpAdvancedOperationPanel();</span>
+
+<span class="nc" id="L187">        JPanel panel = new JPanel();</span>
+<span class="nc" id="L188">        panel.setLayout(new BorderLayout());</span>
+
+<span class="nc" id="L190">        panel.add(outputField, BorderLayout.NORTH);</span>
+
+<span class="nc" id="L192">        panel.add(advancedOperationPanel, BorderLayout.WEST);</span>
+<span class="nc" id="L193">        panel.add(numberPanel, BorderLayout.CENTER);</span>
+<span class="nc" id="L194">        panel.add(basicOperationPanel, BorderLayout.EAST);</span>
+
+<span class="nc" id="L196">        add(panel);</span>
+
+<span class="nc" id="L198">        setTitle(&quot;Calculator&quot;);</span>
+<span class="nc" id="L199">        setSize(1000, 600);</span>
+<span class="nc" id="L200">        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L201">        setLocationRelativeTo(null);</span>
+<span class="nc" id="L202">    }</span>
+
+    /**
+     * Method that will handle all operation actions
+     *
+     * @return ActionListener
+     */
+    public ActionListener operationListener() {
+<span class="nc" id="L210">        return new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L212">                String command = e.getActionCommand();</span>
+                //Dont allow to add more operation if there is two numbers.
+<span class="nc bnc" id="L214" title="All 2 branches missed.">                if (secondInputNumber.isEmpty()) {</span>
+<span class="nc" id="L215">                    outputText += command;</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">                    if (command.equals(&quot;-&quot;) &amp;&amp;</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">                            firstInputNumber.isEmpty()) {</span>
+<span class="nc" id="L218">                        firstInputNumber = command;</span>
+                    } else {
+<span class="nc" id="L220">                        mathCommand = command;</span>
+                    }
+<span class="nc" id="L222">                    updateOutputField();</span>
+                }
+<span class="nc" id="L224">            }</span>
+        };
+    }
+
+    /**
+     * Method that will handle all number input actions
+     *
+     * @return ActionListener
+     */
+    public ActionListener numberListener() {
+<span class="nc" id="L234">        return new ActionListener() {</span>
+            public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L236">                String value = e.getActionCommand();</span>
+<span class="nc" id="L237">                outputText += value;</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (mathCommand.isEmpty()) {</span>
+<span class="nc" id="L239">                    firstInputNumber += value;</span>
+                } else {
+<span class="nc" id="L241">                    secondInputNumber += value;</span>
+                }
+<span class="nc" id="L243">                updateOutputField();</span>
+<span class="nc" id="L244">            }</span>
+        };
+    }
+
+    /**
+     * Main method
+     *
+     * @param args String[]
+     */
+    public static void main(String[] args) {
+<span class="nc" id="L254">        Calculator calculator = new Calculator();</span>
+<span class="nc" id="L255">        calculator.pack();</span>
+<span class="nc" id="L256">        calculator.setLocationRelativeTo(null);</span>
+<span class="nc" id="L257">        calculator.setVisible(true);</span>
+<span class="nc" id="L258">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
